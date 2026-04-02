@@ -2,83 +2,81 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Piano IA de Mehdi</title>
+    <title>Mehdi AI Piano + Link</title>
     <style>
-        body { background: #1a1a2e; display: flex; flex-direction: column; align-items: center; font-family: 'Segoe UI', sans-serif; color: white; padding: 40px; }
-        .title { color: #4cc9f0; font-size: 3rem; text-shadow: 0 0 15px #4cc9f0; margin-bottom: 5px; }
-        .subtitle { margin-bottom: 30px; opacity: 0.8; }
-        
-        .piano-container { background: #000; padding: 25px; border-radius: 15px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 2px solid #4cc9f0; }
-        .piano { display: flex; position: relative; }
-        
-        .key { cursor: pointer; position: relative; transition: all 0.1s; user-select: none; }
-        .white { width: 50px; height: 220px; background: white; border: 1px solid #ccc; border-radius: 0 0 8px 8px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; color: #333; font-weight: bold; }
-        .black { width: 32px; height: 130px; background: #222; margin: 0 -16px; z-index: 2; border-radius: 0 0 5px 5px; border: 1px solid #000; }
-        
-        /* Animation quand on clique */
-        .white:active, .white.playing { background: #4cc9f0; transform: translateY(2px); color: white; }
-        .black:active, .black.playing { background: #4361ee; transform: translateY(2px); }
+        /* Mise en page globale */
+        body { 
+            background: #1a1a2e; 
+            display: flex; 
+            flex-direction: row; /* Colonne à gauche, piano à droite */
+            align-items: center; 
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif; 
+            color: white; 
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-        .instructions { margin-top: 30px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center; }
-        b { color: #f72585; }
+        /* LA NOUVELLE COLONNE À GAUCHE */
+        .sidebar {
+            width: 150px;
+            height: 80%;
+            background: rgba(255, 255, 255, 0.05);
+            border-right: 2px solid #4cc9f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            margin-right: 40px;
+            border-radius: 0 20px 20px 0;
+        }
+
+        .nav-button {
+            background: #f72585;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 0 15px #f72585;
+        }
+
+        .nav-button:hover {
+            transform: scale(1.1);
+            background: #ff4d94;
+        }
+
+        /* STYLE DU PIANO (Inchangé) */
+        .main-content { display: flex; flex-direction: column; align-items: center; }
+        .title { color: #4cc9f0; font-size: 2.5rem; text-shadow: 0 0 15px #4cc9f0; margin-bottom: 20px; }
+        .piano-container { background: #000; padding: 20px; border-radius: 15px; border: 2px solid #4cc9f0; }
+        .piano { display: flex; position: relative; }
+        .key { cursor: pointer; transition: all 0.1s; user-select: none; }
+        .white { width: 45px; height: 200px; background: white; border: 1px solid #ccc; border-radius: 0 0 8px 8px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; color: #333; font-weight: bold; }
+        .black { width: 30px; height: 120px; background: #222; margin: 0 -15px; z-index: 2; border-radius: 0 0 5px 5px; }
+        .white:active { background: #4cc9f0; color: white; }
     </style>
 </head>
 <body>
 
-    <h1 class="title">Mehdi AI Piano</h1>
-    <p class="subtitle">Clique sur les touches avec une étoile ⭐ pour lancer une musique célèbre !</p>
-
-    <div class="piano-container">
-        <div class="piano">
-            <div class="key white" onclick="playNote(261)">DO</div>
-            <div class="key black" onclick="playNote(277)"></div>
-            <div class="key white" onclick="playNote(293)">RE</div>
-            <div class="key black" onclick="playNote(311)"></div>
-            <div class="key white" onclick="playMelody('elise')">⭐ Elise</div>
-            <div class="key white" onclick="playNote(349)">FA</div>
-            <div class="key black" onclick="playNote(370)"></div>
-            <div class="key white" onclick="playMelody('starwars')">⭐ Wars</div>
-            <div class="key black" onclick="playNote(415)"></div>
-            <div class="key white" onclick="playNote(440)">LA</div>
-            <div class="key black" onclick="playNote(466)"></div>
-            <div class="key white" onclick="playMelody('pirate')">⭐ Pirate</div>
-            <div class="key white" onclick="playNote(523)">DO</div>
-        </div>
+    <div class="sidebar">
+        <p style="text-align:center; font-size: 0.8rem; margin-bottom: 15px;">ACCÈS RAPIDE</p>
+        <a href="https://mehdikaidi98-lgtm.github.io/mehdi-maggica-piano/" class="nav-button">
+            VOIR MA PAGE <br> EN LIGNE 🚀
+        </a>
     </div>
 
-    <div class="instructions">
-        Les touches <b>MI</b>, <b>SOL</b> et <b>SI</b> déclenchent l'IA mélodique !
-    </div>
-
-    <script>
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playNote(freq, duration = 0.5) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.value = freq;
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
-        }
-
-        async function playMelody(name) {
-            const melodies = {
-                'elise': [ [659, 0.2], [622, 0.2], [659, 0.2], [622, 0.2], [659, 0.2], [493, 0.2], [587, 0.2], [523, 0.2], [440, 0.4] ],
-                'starwars': [ [440, 0.4], [440, 0.4], [440, 0.4], [349, 0.3], [523, 0.1], [440, 0.4], [349, 0.3], [523, 0.1], [440, 0.5] ],
-                'pirate': [ [293, 0.2], [349, 0.2], [440, 0.2], [440, 0.2], [440, 0.2], [493, 0.2], [523, 0.2], [523, 0.2], [523, 0.2], [493, 0.2], [440, 0.2], [392, 0.2], [440, 0.4] ]
-            };
-
-            const notes = melodies[name];
-            for (let note of notes) {
-                playNote(note[0], note[1] + 0.1);
-                await new Promise(r => setTimeout(r, note[1] * 1000 + 50));
-            }
-        }
-    </script>
-</body>
-</html>
+    <div class="main-content">
+        <h1 class="title">Mehdi AI Piano</h1>
+        <div class="piano-container">
+            <div class="piano">
+                <div class="key white" onclick="playNote(261)">DO</div>
+                <div class="key black" onclick="playNote(277)"></div>
+                <div class="key white" onclick="playNote(293)">RE</div>
+                <div class="key black" onclick="playNote
