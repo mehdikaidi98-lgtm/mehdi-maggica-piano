@@ -2,88 +2,82 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Piano XL de Mehdi</title>
+    <title>Piano IA de Mehdi</title>
     <style>
-        body { background: #f0f4f8; display: flex; flex-direction: column; align-items: center; font-family: sans-serif; padding: 50px; }
-        .name { color: #2ecc71; font-size: 3rem; margin-bottom: 20px; }
+        body { background: #1a1a2e; display: flex; flex-direction: column; align-items: center; font-family: 'Segoe UI', sans-serif; color: white; padding: 40px; }
+        .title { color: #4cc9f0; font-size: 3rem; text-shadow: 0 0 15px #4cc9f0; margin-bottom: 5px; }
+        .subtitle { margin-bottom: 30px; opacity: 0.8; }
         
-        /* Conteneur noir pour tenir toutes les touches */
-        .piano-frame {
-            background: #333;
-            padding: 15px;
-            border-radius: 10px;
-            display: flex;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
+        .piano-container { background: #000; padding: 25px; border-radius: 15px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 2px solid #4cc9f0; }
         .piano { display: flex; position: relative; }
+        
+        .key { cursor: pointer; position: relative; transition: all 0.1s; user-select: none; }
+        .white { width: 50px; height: 220px; background: white; border: 1px solid #ccc; border-radius: 0 0 8px 8px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; color: #333; font-weight: bold; }
+        .black { width: 32px; height: 130px; background: #222; margin: 0 -16px; z-index: 2; border-radius: 0 0 5px 5px; border: 1px solid #000; }
+        
+        /* Animation quand on clique */
+        .white:active, .white.playing { background: #4cc9f0; transform: translateY(2px); color: white; }
+        .black:active, .black.playing { background: #4361ee; transform: translateY(2px); }
 
-        .key { cursor: pointer; position: relative; transition: 0.1s; user-select: none; }
-
-        /* Touches blanches (40px de large pour en mettre 14) */
-        .white { 
-            width: 40px; height: 200px; background: white; 
-            border: 1px solid #ddd; border-radius: 0 0 5px 5px;
-            display: flex; align-items: flex-end; justify-content: center;
-            padding-bottom: 10px; font-weight: bold; color: #bbb; font-size: 0.7rem;
-        }
-
-        /* Touches noires */
-        .black { 
-            width: 26px; height: 120px; background: #222; 
-            margin: 0 -13px; z-index: 2; border-radius: 0 0 3px 3px; 
-        }
-
-        .white:active { background: #2ecc71; color: white; }
-        .black:active { background: #27ae60; }
+        .instructions { margin-top: 30px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center; }
+        b { color: #f72585; }
     </style>
 </head>
 <body>
 
-    <h1 class="name">Mehdi</h1>
+    <h1 class="title">Mehdi AI Piano</h1>
+    <p class="subtitle">Clique sur les touches avec une étoile ⭐ pour lancer une musique célèbre !</p>
 
-    <div class="piano-frame">
+    <div class="piano-container">
         <div class="piano">
-            <div class="key white" onclick="play(261)"><span>DO</span></div>
-            <div class="key black" onclick="play(277)"></div>
-            <div class="key white" onclick="play(293)"><span>RÉ</span></div>
-            <div class="key black" onclick="play(311)"></div>
-            <div class="key white" onclick="play(329)"><span>MI</span></div>
-            <div class="key white" onclick="play(349)"><span>FA</span></div>
-            <div class="key black" onclick="play(370)"></div>
-            <div class="key white" onclick="play(392)"><span>SOL</span></div>
-            <div class="key black" onclick="play(415)"></div>
-            <div class="key white" onclick="play(440)"><span>LA</span></div>
-            <div class="key black" onclick="play(466)"></div>
-            <div class="key white" onclick="play(494)"><span>SI</span></div>
-            <div class="key white" onclick="play(523)"><span>DO</span></div>
-            <div class="key black" onclick="play(554)"></div>
-            <div class="key white" onclick="play(587)"><span>RÉ</span></div>
-            <div class="key black" onclick="play(622)"></div>
-            <div class="key white" onclick="play(659)"><span>MI</span></div>
-            <div class="key white" onclick="play(698)"><span>FA</span></div>
-            <div class="key black" onclick="play(740)"></div>
-            <div class="key white" onclick="play(784)"><span>SOL</span></div>
-            <div class="key black" onclick="play(831)"></div>
-            <div class="key white" onclick="play(880)"><span>LA</span></div>
-            <div class="key black" onclick="play(932)"></div>
-            <div class="key white" onclick="play(988)"><span>SI</span></div>
+            <div class="key white" onclick="playNote(261)">DO</div>
+            <div class="key black" onclick="playNote(277)"></div>
+            <div class="key white" onclick="playNote(293)">RE</div>
+            <div class="key black" onclick="playNote(311)"></div>
+            <div class="key white" onclick="playMelody('elise')">⭐ Elise</div>
+            <div class="key white" onclick="playNote(349)">FA</div>
+            <div class="key black" onclick="playNote(370)"></div>
+            <div class="key white" onclick="playMelody('starwars')">⭐ Wars</div>
+            <div class="key black" onclick="playNote(415)"></div>
+            <div class="key white" onclick="playNote(440)">LA</div>
+            <div class="key black" onclick="playNote(466)"></div>
+            <div class="key white" onclick="playMelody('pirate')">⭐ Pirate</div>
+            <div class="key white" onclick="playNote(523)">DO</div>
         </div>
+    </div>
+
+    <div class="instructions">
+        Les touches <b>MI</b>, <b>SOL</b> et <b>SI</b> déclenchent l'IA mélodique !
     </div>
 
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function play(f) {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.type = 'triangle';
-            o.frequency.value = f;
-            g.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1);
-            o.connect(g);
-            g.connect(audioCtx.destination);
-            o.start();
-            o.stop(audioCtx.currentTime + 1);
+
+        function playNote(freq, duration = 0.5) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        async function playMelody(name) {
+            const melodies = {
+                'elise': [ [659, 0.2], [622, 0.2], [659, 0.2], [622, 0.2], [659, 0.2], [493, 0.2], [587, 0.2], [523, 0.2], [440, 0.4] ],
+                'starwars': [ [440, 0.4], [440, 0.4], [440, 0.4], [349, 0.3], [523, 0.1], [440, 0.4], [349, 0.3], [523, 0.1], [440, 0.5] ],
+                'pirate': [ [293, 0.2], [349, 0.2], [440, 0.2], [440, 0.2], [440, 0.2], [493, 0.2], [523, 0.2], [523, 0.2], [523, 0.2], [493, 0.2], [440, 0.2], [392, 0.2], [440, 0.4] ]
+            };
+
+            const notes = melodies[name];
+            for (let note of notes) {
+                playNote(note[0], note[1] + 0.1);
+                await new Promise(r => setTimeout(r, note[1] * 1000 + 50));
+            }
         }
     </script>
 </body>
