@@ -2,108 +2,201 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Piano XL de Mehdi</title>
+    <title>Piano XL de Mehdi avec Mode IA</title>
     <style>
-        body { background: #1a1a2e; display: flex; flex-direction: row; align-items: center; justify-content: center; font-family: sans-serif; color: white; margin: 0; height: 100vh; }
-        
-        /* COLONNE GAUCHE */
+        /* Mise en page globale */
+        body { 
+            background: #1a1a2e; 
+            display: flex; 
+            flex-direction: row; /* Colonne à gauche, piano à droite */
+            align-items: center; 
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif; 
+            color: white; 
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* LA PETITE COLONNE À GAUCHE */
         .sidebar {
-            width: 140px; height: 80%; background: rgba(255, 255, 255, 0.1);
-            border-right: 3px solid #2ecc71; display: flex; flex-direction: column;
-            align-items: center; justify-content: space-around; padding: 15px; border-radius: 0 20px 20px 0;
+            width: 120px;
+            height: 80%;
+            background: rgba(255, 255, 255, 0.05);
+            border-right: 2px solid #2ecc71;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            margin-right: 30px;
+            border-radius: 0 20px 20px 0;
         }
 
-        .btn {
-            background: #f72585; color: white; border: none; padding: 10px;
-            border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 0.8rem;
+        .sidebar-title {
+            color: #2ecc71;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #2ecc71;
         }
 
-        .btn-start { background: #4cc9f0; box-shadow: 0 0 10px #4cc9f0; margin-bottom: 10px; }
+        .nav-button {
+            background: #f72585;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 0 10px #f72585;
+            font-size: 0.9rem;
+        }
 
-        /* PIANO */
-        .main { display: flex; flex-direction: column; align-items: center; }
-        .piano-container { background: #333; padding: 20px; border-radius: 15px; border: 2px solid #2ecc71; }
-        .piano { display: flex; }
-        .key { cursor: pointer; position: relative; }
-        .white { width: 40px; height: 200px; background: white; border: 1px solid #ddd; border-radius: 0 0 5px 5px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 10px; color: #333; font-weight: bold; font-size: 0.8rem; }
-        .black { width: 28px; height: 120px; background: #222; margin: 0 -14px; z-index: 2; border-radius: 0 0 3px 3px; }
-        .white:active { background: #2ecc71; }
+        .nav-button:hover {
+            transform: scale(1.05);
+            background: #ff4d94;
+        }
+
+        /* STYLE DU PIANO (Basé sur ton Piano XL) */
+        .main-content { display: flex; flex-direction: column; align-items: center; }
+        .title { color: #2ecc71; font-size: 2.5rem; text-shadow: 0 0 15px #2ecc71; margin-bottom: 20px; }
+        .piano-container { background: #333; padding: 15px; border-radius: 12px; border: 2px solid #2ecc71; box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
+        .piano { display: flex; position: relative; }
+        .key { cursor: pointer; transition: all 0.1s; user-select: none; }
+        .white { width: 38px; height: 180px; background: white; border: 1px solid #ddd; border-radius: 0 0 6px 6px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; color: #bbb; font-weight: bold; font-size: 0.7rem; }
+        .black { width: 26px; height: 110px; background: #222; margin: 0 -13px; z-index: 2; border-radius: 0 0 4px 4px; }
+        
+        /* Couleur quand on clique */
+        .white:active, .white.active { background: #2ecc71; color: white; }
+        .black:active, .black.active { background: #27ae60; }
+        
+        /* Couleur spéciale pour le mode IA */
+        .ia-mode-active .white:active, .ia-mode-active .white.active { background: #f72585; color: white; }
+        .ia-mode-active .black:active, .ia-mode-active .black.active { background: #ff4d94; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div style="text-align:center; color:#2ecc71; font-weight:bold;">AI MUSIC</div>
-        
-        <button class="btn btn-start" onclick="startAudio()">1. DÉMARRER <br> LE SON 🔊</button>
-        
-        <button id="aiBtn" class="btn" onclick="toggleIA()">2. ACTIVER <br> IA MODE ⭐</button>
+        <div class="sidebar-title">🎹 <br> MENU <br> PIANO</div>
+        <button id="aiButton" class="nav-button" onclick="toggleIAMode()">
+            ACTIVER <br> IA MUSIQUE ⭐
+        </button>
     </div>
 
-    <div class="main">
-        <h1 style="color:#2ecc71;">Mehdi Piano XL</h1>
+    <div class="main-content" id="pianoContent">
+        <h1 class="title">Mehdi Piano XL</h1>
         <div class="piano-container">
-            <div class="piano" id="keyboard">
-                </div>
+            <div class="piano">
+                <div id="key-261" class="key white" onclick="keyPress(261)"><span>DO</span></div>
+                <div id="key-277" class="key black" onclick="keyPress(277)"></div>
+                <div id="key-293" class="key white" onclick="keyPress(293)"><span>RÉ</span></div>
+                <div id="key-311" class="key black" onclick="keyPress(311)"></div>
+                <div id="key-329" class="key white" onclick="keyPress(329)"><span>MI</span></div>
+                <div id="key-349" class="key white" onclick="keyPress(349)"><span>FA</span></div>
+                <div id="key-370" class="key black" onclick="keyPress(370)"></div>
+                <div id="key-392" class="key white" onclick="keyPress(392)"><span>SOL</span></div>
+                <div id="key-415" class="key black" onclick="keyPress(415)"></div>
+                <div id="key-440" class="key white" onclick="keyPress(440)"><span>LA</span></div>
+                <div id="key-466" class="key black" onclick="keyPress(466)"></div>
+                <div id="key-494" class="key white" onclick="keyPress(494)"><span>SI</span></div>
+                
+                <div id="key-523" class="key white" onclick="keyPress(523)"><span>DO</span></div>
+                <div id="key-554" class="key black" onclick="keyPress(554)"></div>
+                <div id="key-587" class="key white" onclick="keyPress(587)"><span>RÉ</span></div>
+                <div id="key-622" class="key black" onclick="keyPress(622)"></div>
+                <div id="key-659" class="key white" onclick="keyPress(659)"><span>MI</span></div>
+                <div id="key-698" class="key white" onclick="keyPress(698)"><span>FA</span></div>
+                <div id="key-740" class="key black" onclick="keyPress(740)"></div>
+                <div id="key-784" class="key white" onclick="keyPress(784)"><span>SOL</span></div>
+                <div id="key-831" class="key black" onclick="keyPress(831)"></div>
+                <div id="key-880" class="key white" onclick="keyPress(880)"><span>LA</span></div>
+                <div id="key-932" class="key black" onclick="keyPress(932)"></div>
+                <div id="key-988" class="key white" onclick="keyPress(988)"><span>SI</span></div>
+            </div>
         </div>
     </div>
 
     <script>
-        let audioCtx;
-        let isIA = false;
-        const freqs = [261, 277, 293, 311, 329, 349, 370, 392, 415, 440, 466, 494, 523, 554, 587, 622, 659, 698, 740, 784, 831, 880, 932, 988];
-        const names = ["DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI", "DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI"];
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let isIAMode = false;
 
-        // CREE LE PIANO
-        const keyboard = document.getElementById('keyboard');
-        freqs.forEach((f, i) => {
-            const key = document.createElement('div');
-            key.className = `key ${names[i] ? 'white' : 'black'}`;
-            if(names[i]) key.innerHTML = `<span>${names[i]}</span>`;
-            key.onclick = () => playKey(f);
-            keyboard.appendChild(key);
-        });
-
-        function startAudio() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            alert("Son activé ! Tu peux jouer.");
+        // Fonction pour jouer une note simple
+        function playNote(freq, duration = 0.5) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle'; osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + duration);
         }
 
-        function playNote(f, d = 0.5) {
-            if(!audioCtx) return;
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.type = 'triangle'; o.frequency.value = f;
-            g.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + d);
-            o.connect(g); g.connect(audioCtx.destination);
-            o.start(); o.stop(audioCtx.currentTime + d);
-        }
-
-        async function playMelody(m) {
-            const songs = {
-                'elise': [659, 622, 659, 622, 659, 494, 587, 523, 440],
-                'wars': [440, 440, 440, 349, 523, 440]
+        // Fonction pour jouer une mélodie célèbre (Mode IA)
+        async function playMelody(name) {
+            const melodies = {
+                'elise': [[659, 0.2], [622, 0.2], [659, 0.2], [622, 0.2], [659, 0.2]],
+                'starwars': [[440, 0.4], [440, 0.4], [440, 0.4], [349, 0.3]],
+                'pirate': [[293, 0.2], [349, 0.2], [440, 0.2], [440, 0.2]]
             };
-            for(let f of songs[m]) {
-                playNote(f, 0.3);
-                await new Promise(r => setTimeout(r, 350));
+            const notes = melodies[name];
+            for (let note of notes) {
+                // Allume la touche virtuellement pendant la mélodie
+                const keyElem = document.getElementById('key-'+note[0]);
+                if(keyElem) keyElem.classList.add('active');
+                
+                playNote(note[0], note[1]);
+                await new Promise(r => setTimeout(r, note[1] * 1000 + 50));
+                
+                if(keyElem) keyElem.classList.remove('active');
             }
         }
 
-        function playKey(f) {
-            if(isIA) {
-                if(f === 329) { playMelody('elise'); return; }
-                if(f === 392) { playMelody('wars'); return; }
+        // Gère le clic sur une touche du piano
+        function keyPress(freq) {
+            // Si Mode IA activé, certaines touches jouent une mélodie
+            if (isIAMode) {
+                if (freq === 329) { playMelody('elise'); return; }   // MI joue Elise
+                if (freq === 392) { playMelody('starwars'); return; } // SOL joue Star Wars
+                if (freq === 494) { playMelody('pirate'); return; }   // SI joue Pirate
             }
-            playNote(f);
+            // Sinon (Mode normal ou autre touche), joue juste la note
+            playNote(freq);
         }
 
-        function toggleIA() {
-            isIA = !isIA;
-            document.getElementById('aiBtn').style.background = isIA ? "#2ecc71" : "#f72585";
-            document.getElementById('aiBtn').innerHTML = isIA ? "MODE IA <br> ON ⭐" : "2. ACTIVER <br> IA MODE ⭐";
+        // Bascule entre Mode Normal et Mode IA
+        function toggleIAMode() {
+            isIAMode = !isIAMode;
+            const btn = document.getElementById('aiButton');
+            const pianoBox = document.getElementById('pianoContent');
+            const keys = document.querySelectorAll('.key.white span');
+
+            if (isIAMode) {
+                // ACTIVE LE MODE IA
+                btn.innerHTML = "MODE IA 🎵 <br> ACTIF ⭐";
+                btn.style.background = "#2ecc71";
+                btn.style.boxShadow = "0 0 10px #2ecc71";
+                pianoBox.classList.add('ia-mode-active');
+                // Change le texte des touches MI, SOL, SI
+                keys[2].innerText = "⭐ Elise";  // MI 1
+                keys[4].innerText = "⭐ Wars";   // SOL 1
+                keys[6].innerText = "⭐ Pirate"; // SI 1
+            } else {
+                // REVIENT AU MODE NORMAL (Piano Précédent)
+                btn.innerHTML = "ACTIVER <br> IA MUSIQUE ⭐";
+                btn.style.background = "#f72585";
+                btn.style.boxShadow = "0 0 10px #f72585";
+                pianoBox.classList.remove('ia-mode-active');
+                // Remet le texte normal des touches
+                keys[2].innerText = "MI";
+                keys[4].innerText = "SOL";
+                keys[6].innerText = "SI";
+            }
         }
     </script>
 </body>
