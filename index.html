@@ -2,11 +2,10 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mehdi Piano - Écho 5 Secondes</title>
+    <title>Mehdi Piano - Grand Orchestre</title>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: white; overflow: hidden; }
         
-        /* PAGE DE GARDE */
         #welcome-screen {
             position: fixed; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a2e, #0f0f1a);
             display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100;
@@ -15,7 +14,6 @@
 
         #piano-interface { display: none; height: 100vh; flex-direction: row; align-items: center; justify-content: center; }
         
-        /* SIDEBAR */
         .sidebar { 
             width: 220px; height: 95%; background: rgba(255, 255, 255, 0.05); 
             border-right: 3px solid #2ecc71; display: flex; flex-direction: column; 
@@ -29,7 +27,6 @@
         }
         .orch-btn:hover { background: #4cc9f0; }
 
-        /* PIANO LARGE */
         .main-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; }
         .piano-container { background: #333; padding: 20px; border-radius: 15px; border: 2px solid #2ecc71; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
         .piano { display: flex; }
@@ -44,21 +41,21 @@
 
     <div id="welcome-screen">
         <h1 style="color: #2ecc71; font-size: 4rem; letter-spacing: 5px; text-shadow: 0 0 20px #2ecc71;">MEHDI PIANO</h1>
-        <button class="start-btn" onclick="enterPiano()">DÉMARRER L'ORCHESTRE 🎼</button>
+        <button class="start-btn" onclick="enterPiano()">OUVRIR L'ORCHESTRE 🎼</button>
     </div>
 
     <div id="piano-interface">
         <div class="sidebar">
-            <h3 style="color:#2ecc71">10 MUSIQUES</h3>
-            <button class="orch-btn" onclick="playMelody('mario')">1. Mario Bros 🍄</button>
-            <button class="orch-btn" onclick="playMelody('elise')">2. Lettre à Élise 🎹</button>
-            <button class="orch-btn" onclick="playMelody('starwars')">3. Star Wars 🚀</button>
-            <button class="orch-btn" onclick="playMelody('pirate')">4. Pirates 🏴‍☠️</button>
-            <button class="orch-btn" onclick="playMelody('potter')">5. Harry Potter ⚡</button>
+            <h3 style="color:#2ecc71">10 MUSIQUES LONGUES</h3>
+            <button class="orch-btn" onclick="playMelody('mario')">1. Mario Bros Full 🍄</button>
+            <button class="orch-btn" onclick="playMelody('elise')">2. Lettre à Élise Full 🎹</button>
+            <button class="orch-btn" onclick="playMelody('starwars')">3. Star Wars Theme 🚀</button>
+            <button class="orch-btn" onclick="playMelody('pirate')">4. Pirates Caraïbes 🏴‍☠️</button>
+            <button class="orch-btn" onclick="playMelody('potter')">5. Harry Potter Full ⚡</button>
             <button class="orch-btn" onclick="playMelody('mission')">6. Mission Impossible 🕶️</button>
             <button class="orch-btn" onclick="playMelody('bella')">7. Bella Ciao 🎶</button>
             <button class="orch-btn" onclick="playMelody('jingle')">8. Vive le Vent ❄️</button>
-            <button class="orch-btn" onclick="playMelody('titanic')">9. Titanic 🚢</button>
+            <button class="orch-btn" onclick="playMelody('titanic')">9. Titanic Theme 🚢</button>
             <button class="orch-btn" onclick="playMelody('queen')">10. We Will Rock You 🥁</button>
         </div>
 
@@ -76,16 +73,16 @@
         const names = ["DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI", "DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI"];
 
         const melodies = {
-            'mario': [659, 659, 659, 523, 659, 784, 392],
-            'elise': [659, 622, 659, 622, 659, 494, 587, 523, 440],
-            'starwars': [440, 440, 440, 349, 523, 440],
-            'pirate': [293, 349, 440, 440, 440, 494, 523],
-            'potter': [494, 659, 784, 740, 659, 988],
-            'mission': [440, 440, 523, 587, 440, 440, 392],
-            'bella': [440, 494, 523, 440, 440, 494, 523],
-            'jingle': [659, 659, 659, 659, 659, 659, 659, 784, 523, 587, 659],
-            'titanic': [523, 523, 523, 523, 494, 523, 523, 494, 523, 587, 659],
-            'queen': [261, 261, 329, 261, 261, 329]
+            'mario': [659, 659, 0, 659, 0, 523, 659, 0, 784, 0, 392, 0, 523, 392, 329, 440, 494, 466, 440, 392, 659, 784, 880, 698, 784, 659, 523, 587, 494],
+            'elise': [659, 622, 659, 622, 659, 494, 587, 523, 440, 0, 261, 329, 440, 494, 0, 329, 415, 494, 523, 0, 329, 659, 622, 659, 622, 659, 494, 587, 523, 440],
+            'starwars': [440, 440, 440, 349, 523, 440, 349, 523, 440, 659, 659, 659, 698, 523, 415, 349, 523, 440],
+            'pirate': [293, 349, 440, 440, 440, 494, 523, 523, 523, 587, 494, 494, 440, 392, 392, 440],
+            'potter': [494, 659, 784, 740, 659, 988, 880, 740, 659, 784, 740, 587, 622, 494],
+            'mission': [440, 440, 523, 587, 440, 440, 392, 415, 440, 440, 523, 587, 440, 440, 392, 415, 659, 587, 440],
+            'bella': [440, 494, 523, 440, 0, 440, 494, 523, 440, 0, 440, 494, 523, 494, 440, 523, 494, 440, 587, 587, 587, 587, 523, 494, 440],
+            'jingle': [659, 659, 659, 659, 659, 659, 659, 784, 523, 587, 659, 0, 698, 698, 698, 698, 698, 659, 659, 659, 659, 587, 587, 659, 587, 784],
+            'titanic': [523, 523, 523, 523, 494, 523, 523, 494, 523, 587, 659, 587, 523, 523, 523, 523, 494, 523, 523, 392],
+            'queen': [261, 261, 329, 0, 261, 261, 329, 0, 261, 261, 329, 349, 329, 293, 261]
         };
 
         function enterPiano() {
@@ -107,11 +104,12 @@
             });
         }
 
-        function playNote(f, d = 5.0) { // DURÉE DU SON : 5 SECONDES
+        function playNote(f, d = 5.0) {
+            if (f === 0) return; // Silence
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
             o.type = 'triangle'; o.frequency.value = f;
-            g.gain.setValueAtTime(0.08, audioCtx.currentTime); // Volume doux pour éviter les craquements
+            g.gain.setValueAtTime(0.08, audioCtx.currentTime);
             g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + d);
             o.connect(g); g.connect(audioCtx.destination);
             o.start(); o.stop(audioCtx.currentTime + d);
@@ -121,8 +119,8 @@
             for(let f of melodies[m]) {
                 const el = document.getElementById("k-" + f);
                 if(el) el.classList.add('active-key');
-                playNote(f, 5.0); // Le son résonne 5 secondes
-                await new Promise(r => setTimeout(r, 250)); // Les notes s'enchaînent vite (0.25s)
+                if (f !== 0) playNote(f, 5.0);
+                await new Promise(r => setTimeout(r, 220)); // Vitesse rapide pour l'enchaînement
                 if(el) el.classList.remove('active-key');
             }
         }
