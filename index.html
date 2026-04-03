@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mehdi Grand Piano - 10 Musiques Lentes</title>
+    <title>Mehdi Grand Piano - 10 Musiques Très Lentes</title>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: white; overflow: hidden; }
         #welcome-screen { position: fixed; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a2e, #0f0f1a); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
@@ -24,13 +24,13 @@
 
     <div id="welcome-screen">
         <h1 style="color: #2ecc71; font-size: 3.5rem;">MEHDI GRAND PIANO</h1>
-        <button class="start-btn" onclick="enterPiano()">ACTIVER L'ORCHESTRE LENT 🎼</button>
+        <button class="start-btn" onclick="enterPiano()">ACTIVER L'ORCHESTRE (1 SEC) 🎼</button>
     </div>
 
     <div id="piano-interface">
         <div class="sidebar">
             <h3 style="color:#2ecc71">10 MUSIQUES</h3>
-            <button class="orch-btn" onclick="playMelody('mario')">1. Mario Bros (Lent) 🍄</button>
+            <button class="orch-btn" onclick="playMelody('mario')">1. Mario Bros 🍄</button>
             <button class="orch-btn" onclick="playMelody('elise')">2. Lettre à Élise 🎹</button>
             <button class="orch-btn" onclick="playMelody('starwars')">3. Star Wars 🚀</button>
             <button class="orch-btn" onclick="playMelody('pirate')">4. Pirates 🏴‍☠️</button>
@@ -52,7 +52,6 @@
 
     <script>
         let audioCtx;
-        // Clavier large (2 octaves)
         const freqs = [261, 277, 293, 311, 329, 349, 370, 392, 415, 440, 466, 494, 523, 554, 587, 622, 659, 698, 740, 784, 831, 880, 932, 988];
         const names = ["DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI", "DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI"];
 
@@ -88,7 +87,7 @@
             });
         }
 
-        function playNote(f, d = 0.6) {
+        function playNote(f, d = 0.9) {
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
             o.type = 'triangle'; o.frequency.value = f;
@@ -102,9 +101,9 @@
             for(let f of melodies[m]) {
                 const el = document.getElementById("k-" + f);
                 if(el) el.classList.add('active-key');
-                playNote(f, 0.5);
-                // Vitesse ralentie à 500ms (au lieu de 300ms)
-                await new Promise(r => setTimeout(r, 500));
+                playNote(f, 0.8);
+                // ATTENTE DE 1 SECONDE (1000ms)
+                await new Promise(r => setTimeout(r, 1000));
                 if(el) el.classList.remove('active-key');
             }
         }
