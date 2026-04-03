@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mehdi Piano - Rapide et Long</title>
+    <title>Mehdi Piano - Écho 5 Secondes</title>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: white; overflow: hidden; }
         
@@ -31,11 +31,11 @@
 
         /* PIANO LARGE */
         .main-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; }
-        .piano-container { background: #333; padding: 20px; border-radius: 15px; border: 2px solid #2ecc71; }
+        .piano-container { background: #333; padding: 20px; border-radius: 15px; border: 2px solid #2ecc71; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
         .piano { display: flex; }
         .key { cursor: pointer; transition: 0.1s; position: relative; }
-        .white { width: 50px; height: 220px; background: white; border: 1px solid #ddd; border-radius: 0 0 8px 8px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; color: #333; font-weight: bold; }
-        .black { width: 34px; height: 130px; background: #222; margin: 0 -17px; z-index: 2; border-radius: 0 0 5px 5px; }
+        .white { width: 50px; height: 230px; background: white; border: 1px solid #ddd; border-radius: 0 0 8px 8px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; color: #333; font-weight: bold; }
+        .black { width: 34px; height: 140px; background: #222; margin: 0 -17px; z-index: 2; border-radius: 0 0 5px 5px; }
         
         .active-key { background: #2ecc71 !important; transform: translateY(5px); }
     </style>
@@ -43,8 +43,8 @@
 <body>
 
     <div id="welcome-screen">
-        <h1 style="color: #2ecc71; font-size: 4rem; letter-spacing: 5px;">MEHDI PIANO</h1>
-        <button class="start-btn" onclick="enterPiano()">JOUER MAINTENANT 🎹</button>
+        <h1 style="color: #2ecc71; font-size: 4rem; letter-spacing: 5px; text-shadow: 0 0 20px #2ecc71;">MEHDI PIANO</h1>
+        <button class="start-btn" onclick="enterPiano()">DÉMARRER L'ORCHESTRE 🎼</button>
     </div>
 
     <div id="piano-interface">
@@ -107,13 +107,12 @@
             });
         }
 
-        function playNote(f, d = 2.0) { // La durée est de 2 secondes
+        function playNote(f, d = 5.0) { // DURÉE DU SON : 5 SECONDES
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
             o.type = 'triangle'; o.frequency.value = f;
-            g.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            // On laisse le son s'éteindre très lentement sur 2 secondes
-            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + d);
+            g.gain.setValueAtTime(0.08, audioCtx.currentTime); // Volume doux pour éviter les craquements
+            g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + d);
             o.connect(g); g.connect(audioCtx.destination);
             o.start(); o.stop(audioCtx.currentTime + d);
         }
@@ -122,9 +121,8 @@
             for(let f of melodies[m]) {
                 const el = document.getElementById("k-" + f);
                 if(el) el.classList.add('active-key');
-                playNote(f, 2.0); // Le son dure longtemps
-                // Mais on attend seulement 200ms avant de passer à la note suivante (Rapide !)
-                await new Promise(r => setTimeout(r, 200));
+                playNote(f, 5.0); // Le son résonne 5 secondes
+                await new Promise(r => setTimeout(r, 250)); // Les notes s'enchaînent vite (0.25s)
                 if(el) el.classList.remove('active-key');
             }
         }
