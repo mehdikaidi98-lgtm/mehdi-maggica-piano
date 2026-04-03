@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mehdi Piano - Grand Orchestre</title>
+    <title>Mehdi Piano XL - Avec Effets de Clic !</title>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: white; overflow: hidden; }
         
@@ -34,19 +34,20 @@
         .white { width: 50px; height: 230px; background: white; border: 1px solid #ddd; border-radius: 0 0 8px 8px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; color: #333; font-weight: bold; }
         .black { width: 34px; height: 140px; background: #222; margin: 0 -17px; z-index: 2; border-radius: 0 0 5px 5px; }
         
-        .active-key { background: #2ecc71 !important; transform: translateY(5px); }
+        /* C'est cette classe qui fait l'effet lumineux vert ! */
+        .active-key { background: #2ecc71 !important; transform: translateY(5px); box-shadow: 0 5px 15px #2ecc71; }
     </style>
 </head>
 <body>
 
     <div id="welcome-screen">
         <h1 style="color: #2ecc71; font-size: 4rem; letter-spacing: 5px; text-shadow: 0 0 20px #2ecc71;">MEHDI PIANO</h1>
-        <button class="start-btn" onclick="enterPiano()">OUVRIR L'ORCHESTRE 🎼</button>
+        <button class="start-btn" onclick="enterPiano()">DÉMARRER LE PIANO 🎹</button>
     </div>
 
     <div id="piano-interface">
         <div class="sidebar">
-            <h3 style="color:#2ecc71">10 MUSIQUES LONGUES</h3>
+            <h3 style="color:#2ecc71">10 MUSIQUES</h3>
             <button class="orch-btn" onclick="playMelody('mario')">1. Mario Bros Full 🍄</button>
             <button class="orch-btn" onclick="playMelody('elise')">2. Lettre à Élise Full 🎹</button>
             <button class="orch-btn" onclick="playMelody('starwars')">3. Star Wars Theme 🚀</button>
@@ -99,7 +100,22 @@
                 key.className = `key ${names[i] ? 'white' : 'black'}`;
                 key.id = "k-" + f;
                 if(names[i]) key.innerHTML = `<span>${names[i]}</span>`;
-                key.onclick = () => playNote(f);
+                
+                // --- AJOUTS ICI POUR LES EFFETS DE CLIC ---
+                
+                // Quand on appuie sur le bouton de la souris (mousedown)
+                key.addEventListener('mousedown', () => {
+                    key.classList.add('active-key'); // Ajoute l'effet vert
+                    playNote(f, 5.0); // Joue la note avec ton écho de 5s
+                });
+                
+                // Quand on relâche le bouton (mouseup) ou que la souris sort (mouseleave)
+                // On utilise les deux pour être sûr que l'effet s'arrête bien.
+                key.addEventListener('mouseup', () => key.classList.remove('active-key'));
+                key.addEventListener('mouseleave', () => key.classList.remove('active-key'));
+                
+                // ----------------------------------------
+                
                 kb.appendChild(key);
             });
         }
@@ -118,10 +134,10 @@
         async function playMelody(m) {
             for(let f of melodies[m]) {
                 const el = document.getElementById("k-" + f);
-                if(el) el.classList.add('active-key');
+                if(el) el.classList.add('active-key'); // Effet vert automatique pour l'orchestre
                 if (f !== 0) playNote(f, 5.0);
-                await new Promise(r => setTimeout(r, 220)); // Vitesse rapide pour l'enchaînement
-                if(el) el.classList.remove('active-key');
+                await new Promise(r => setTimeout(r, 220)); 
+                if(el) el.classList.remove('active-key'); // Enlève l'effet
             }
         }
     </script>
