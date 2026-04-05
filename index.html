@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Mehdi Piano XL - Jouer du Piano en Ligne</title>
-    <meta name="description" content="Découvrez Mehdi Piano XL, un piano virtuel interactif avec écho, orchestre automatique et contrôle au clavier PC.">
-    <meta name="keywords" content="Mehdi Piano, Piano en ligne, Piano Virtuel, Musique, Mehdi Magica Piano">
+    <title>Mehdi Piano XL - Le Piano Virtuel Officiel de Mehdi</title>
+    <meta name="description" content="Joue du piano en ligne avec Mehdi Piano XL. Un instrument virtuel interactif avec orchestre, effets lumineux et contrôle au clavier.">
+    <meta name="keywords" content="Mehdi Piano XL, piano virtuel Mehdi, mehdi-maggica-piano, jouer piano en ligne">
     <meta name="author" content="Mehdi">
 
     <style>
@@ -37,7 +37,6 @@
             color: white; border: none; border-radius: 8px; cursor: pointer;
             font-weight: bold; font-size: 0.8rem; transition: 0.2s;
         }
-        .orch-btn:hover { background: #4cc9f0; }
 
         .main-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; }
         .piano-container { background: #333; padding: 20px; border-radius: 15px; border: 2px solid #2ecc71; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
@@ -46,6 +45,7 @@
         .white { width: 50px; height: 230px; background: white; border: 1px solid #ddd; border-radius: 0 0 8px 8px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; color: #333; font-weight: bold; }
         .black { width: 34px; height: 140px; background: #222; margin: 0 -17px; z-index: 2; border-radius: 0 0 5px 5px; }
         
+        /* Effet lumineux quand on clique */
         .active-key { background: #2ecc71 !important; transform: translateY(5px); box-shadow: 0 5px 15px #2ecc71; }
     </style>
 </head>
@@ -61,25 +61,18 @@
 
     <div id="piano-interface">
         <div class="sidebar">
-            <h3 style="color:#2ecc71">10 MUSIQUES</h3>
-            <button class="orch-btn" onclick="playMelody('mario')">1. Mario Bros Full 🍄</button>
-            <button class="orch-btn" onclick="playMelody('elise')">2. Lettre à Élise Full 🎹</button>
-            <button class="orch-btn" onclick="playMelody('starwars')">3. Star Wars Theme 🚀</button>
-            <button class="orch-btn" onclick="playMelody('pirate')">4. Pirates Caraïbes 🏴‍☠️</button>
-            <button class="orch-btn" onclick="playMelody('potter')">5. Harry Potter Full ⚡</button>
-            <button class="orch-btn" onclick="playMelody('mission')">6. Mission Impossible 🕶️</button>
-            <button class="orch-btn" onclick="playMelody('bella')">7. Bella Ciao 🎶</button>
-            <button class="orch-btn" onclick="playMelody('jingle')">8. Vive le Vent ❄️</button>
-            <button class="orch-btn" onclick="playMelody('titanic')">9. Titanic Theme 🚢</button>
-            <button class="orch-btn" onclick="playMelody('queen')">10. We Will Rock You 🥁</button>
+            <h3 style="color:#2ecc71">ORCHESTRE</h3>
+            <button class="orch-btn" onclick="playMelody('mario')">Mario Bros 🍄</button>
+            <button class="orch-btn" onclick="playMelody('elise')">Lettre à Élise 🎹</button>
+            <button class="orch-btn" onclick="playMelody('pirate')">Pirates 🏴‍☠️</button>
         </div>
 
         <div class="main-content">
-            <h2 style="color:#2ecc71; margin-bottom: 30px;">Mehdi Piano XL - Orchestre Virtuel</h2>
+            <h2 style="color:#2ecc71; margin-bottom: 30px;">Mehdi Piano XL</h2>
             <div class="piano-container">
-                <div class="piano" id="keyboard"></div>
+                <div id="keyboard" class="piano"></div>
             </div>
-            <p style="margin-top: 20px; color: #2ecc71; font-style: italic;">Touches PC : A, Z, E, R, T, Y, U, I...</p>
+            <p style="margin-top: 20px; color: #2ecc71;">Utilise ta souris ou les touches A, Z, E, R, T...</p>
         </div>
     </div>
 
@@ -88,23 +81,7 @@
         const freqs = [261, 277, 293, 311, 329, 349, 370, 392, 415, 440, 466, 494, 523, 554, 587, 622, 659, 698, 740, 784, 831, 880, 932, 988];
         const names = ["DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI", "DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI"];
         
-        const keyMapping = {
-            'a': 261, 'q': 277, 'z': 293, 's': 311, 'e': 329, 'r': 349, 'f': 370, 't': 392, 'g': 415, 'y': 440, 'h': 466, 'u': 494,
-            'i': 523, 'k': 554, 'o': 587, 'l': 622, 'p': 659, 'm': 698
-        };
-
-        const melodies = {
-            'mario': [659, 659, 0, 659, 0, 523, 659, 0, 784, 0, 392, 0, 523, 392, 329, 440, 494, 466, 440, 392, 659, 784, 880, 698, 784, 659, 523, 587, 494],
-            'elise': [659, 622, 659, 622, 659, 494, 587, 523, 440, 0, 261, 329, 440, 494, 0, 329, 415, 494, 523, 0, 329, 659, 622, 659, 622, 659, 494, 587, 523, 440],
-            'starwars': [440, 440, 440, 349, 523, 440, 349, 523, 440, 659, 659, 659, 698, 523, 415, 349, 523, 440],
-            'pirate': [293, 349, 440, 440, 440, 494, 523, 523, 523, 587, 494, 494, 440, 392, 392, 440],
-            'potter': [494, 659, 784, 740, 659, 988, 880, 740, 659, 784, 740, 587, 622, 494],
-            'mission': [440, 440, 523, 587, 440, 440, 392, 415, 440, 440, 523, 587, 440, 440, 392, 415, 659, 587, 440],
-            'bella': [440, 494, 523, 440, 0, 440, 494, 523, 440, 0, 440, 494, 523, 494, 440, 523, 494, 440, 587, 587, 587, 587, 523, 494, 440],
-            'jingle': [659, 659, 659, 659, 659, 659, 659, 784, 523, 587, 659, 0, 698, 698, 698, 698, 698, 659, 659, 659, 659, 587, 587, 659, 587, 784],
-            'titanic': [523, 523, 523, 523, 494, 523, 523, 494, 523, 587, 659, 587, 523, 523, 523, 523, 494, 523, 523, 392],
-            'queen': [261, 261, 329, 0, 261, 261, 329, 0, 261, 261, 329, 349, 329, 293, 261]
-        };
+        const keyMapping = { 'a': 261, 'z': 293, 'e': 329, 'r': 349, 't': 392, 'y': 440, 'u': 494 };
 
         function enterPiano() {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -124,31 +101,25 @@
                 if(names[i]) key.innerHTML = `<span>${names[i]}</span>`;
                 
                 key.addEventListener('mousedown', () => {
-                    key.classList.add('active-key');
-                    playNote(f, 5.0);
+                    key.classList.add('active-key'); // L'effet vert
+                    playNote(f);
                 });
                 key.addEventListener('mouseup', () => key.classList.remove('active-key'));
                 key.addEventListener('mouseleave', () => key.classList.remove('active-key'));
-                
                 kb.appendChild(key);
             });
         }
 
         function setupKeyboard() {
             window.addEventListener('keydown', (e) => {
-                const keyName = e.key.toLowerCase();
-                const freq = keyMapping[keyName];
+                const freq = keyMapping[e.key.toLowerCase()];
                 if (freq) {
                     const el = document.getElementById("k-" + freq);
-                    if (el && !el.classList.contains('active-key')) {
-                        el.classList.add('active-key');
-                        playNote(freq, 5.0);
-                    }
+                    if (el) { el.classList.add('active-key'); playNote(freq); }
                 }
             });
             window.addEventListener('keyup', (e) => {
-                const keyName = e.key.toLowerCase();
-                const freq = keyMapping[keyName];
+                const freq = keyMapping[e.key.toLowerCase()];
                 if (freq) {
                     const el = document.getElementById("k-" + freq);
                     if (el) el.classList.remove('active-key');
@@ -156,23 +127,22 @@
             });
         }
 
-        function playNote(f, d = 5.0) {
-            if (f === 0) return;
+        function playNote(f) {
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
-            o.type = 'triangle'; o.frequency.value = f;
-            g.gain.setValueAtTime(0.08, audioCtx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + d);
+            o.frequency.value = f;
+            g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4);
             o.connect(g); g.connect(audioCtx.destination);
-            o.start(); o.stop(audioCtx.currentTime + d);
+            o.start(); o.stop(audioCtx.currentTime + 4);
         }
 
         async function playMelody(m) {
-            for(let f of melodies[m]) {
+            const notes = { 'mario': [659, 659, 0, 659, 0, 523, 659], 'elise': [659, 622, 659, 622], 'pirate': [293, 349, 440] };
+            for(let f of notes[m]) {
                 const el = document.getElementById("k-" + f);
                 if(el) el.classList.add('active-key');
-                if (f !== 0) playNote(f, 5.0);
-                await new Promise(r => setTimeout(r, 220)); 
+                if(f !== 0) playNote(f);
+                await new Promise(r => setTimeout(r, 200));
                 if(el) el.classList.remove('active-key');
             }
         }
