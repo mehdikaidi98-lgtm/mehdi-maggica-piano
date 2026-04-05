@@ -2,7 +2,13 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mehdi Piano XL - Clavier PC activé</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Mehdi Piano XL - Jouer du Piano en Ligne</title>
+    <meta name="description" content="Découvrez Mehdi Piano XL, un piano virtuel interactif avec écho, orchestre automatique et contrôle au clavier PC.">
+    <meta name="keywords" content="Mehdi Piano, Piano en ligne, Piano Virtuel, Musique, Mehdi Magica Piano">
+    <meta name="author" content="Mehdi">
+
     <style>
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: white; overflow: hidden; }
         
@@ -10,7 +16,13 @@
             position: fixed; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a2e, #0f0f1a);
             display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100;
         }
-        .start-btn { padding: 20px 40px; font-size: 1.5rem; background: #2ecc71; color: white; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 0 20px #2ecc71; }
+        
+        .title-container { text-align: center; margin-bottom: 40px; }
+        .main-title { color: #2ecc71; font-size: 4.5rem; letter-spacing: 8px; text-shadow: 0 0 25px #2ecc71; margin: 0; }
+        .sub-title { color: #4cc9f0; font-size: 2rem; letter-spacing: 15px; margin-top: 10px; font-weight: 300; opacity: 0.9; }
+
+        .start-btn { padding: 20px 50px; font-size: 1.5rem; background: #2ecc71; color: white; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 0 20px #2ecc71; transition: 0.3s; }
+        .start-btn:hover { transform: scale(1.1); box-shadow: 0 0 40px #2ecc71; }
 
         #piano-interface { display: none; height: 100vh; flex-direction: row; align-items: center; justify-content: center; }
         
@@ -31,18 +43,20 @@
         .piano-container { background: #333; padding: 20px; border-radius: 15px; border: 2px solid #2ecc71; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
         .piano { display: flex; }
         .key { cursor: pointer; transition: 0.1s; position: relative; }
-        .white { width: 50px; height: 230px; background: white; border: 1px solid #ddd; border-radius: 0 0 8px 8px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15px; color: #333; font-weight: bold; }
-        .black { width: 34px; height: 140px; background: #222; margin: 0 -17px; z-index: 2; border-radius: 0 0 5px 5px; color: white; font-size: 0.7rem; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 10px; }
+        .white { width: 50px; height: 230px; background: white; border: 1px solid #ddd; border-radius: 0 0 8px 8px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; color: #333; font-weight: bold; }
+        .black { width: 34px; height: 140px; background: #222; margin: 0 -17px; z-index: 2; border-radius: 0 0 5px 5px; }
         
         .active-key { background: #2ecc71 !important; transform: translateY(5px); box-shadow: 0 5px 15px #2ecc71; }
-        .key-label { font-size: 0.8rem; color: #888; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div id="welcome-screen">
-        <h1 style="color: #2ecc71; font-size: 4rem; letter-spacing: 5px; text-shadow: 0 0 20px #2ecc71;">MEHDI PIANO</h1>
-        <button class="start-btn" onclick="enterPiano()">ACTIVER LE CLAVIER 🎹</button>
+        <div class="title-container">
+            <h1 class="main-title">MEHDI PIANO</h1>
+            <div class="sub-title">ENTRE</div>
+        </div>
+        <button class="start-btn" onclick="enterPiano()">COMMENCER 🎹</button>
     </div>
 
     <div id="piano-interface">
@@ -61,11 +75,11 @@
         </div>
 
         <div class="main-content">
-            <h1 style="color:#2ecc71; margin-bottom: 30px;">Mehdi Piano XL</h1>
+            <h2 style="color:#2ecc71; margin-bottom: 30px;">Mehdi Piano XL - Orchestre Virtuel</h2>
             <div class="piano-container">
                 <div class="piano" id="keyboard"></div>
             </div>
-            <p style="margin-top: 20px; color: #2ecc71;">Utilise les touches : A, Z, E, R, T, Y, U, I, O, P...</p>
+            <p style="margin-top: 20px; color: #2ecc71; font-style: italic;">Touches PC : A, Z, E, R, T, Y, U, I...</p>
         </div>
     </div>
 
@@ -74,7 +88,6 @@
         const freqs = [261, 277, 293, 311, 329, 349, 370, 392, 415, 440, 466, 494, 523, 554, 587, 622, 659, 698, 740, 784, 831, 880, 932, 988];
         const names = ["DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI", "DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI"];
         
-        // Mapping des touches du clavier PC (AZERTY)
         const keyMapping = {
             'a': 261, 'q': 277, 'z': 293, 's': 311, 'e': 329, 'r': 349, 'f': 370, 't': 392, 'g': 415, 'y': 440, 'h': 466, 'u': 494,
             'i': 523, 'k': 554, 'o': 587, 'l': 622, 'p': 659, 'm': 698
@@ -98,19 +111,17 @@
             document.getElementById('welcome-screen').style.display = 'none';
             document.getElementById('piano-interface').style.display = 'flex';
             build();
-            setupKeyboard(); // Active l'écoute du clavier PC
+            setupKeyboard();
         }
 
         function build() {
             const kb = document.getElementById('keyboard');
+            kb.innerHTML = '';
             freqs.forEach((f, i) => {
                 const key = document.createElement('div');
                 key.className = `key ${names[i] ? 'white' : 'black'}`;
                 key.id = "k-" + f;
-                
-                // On affiche le nom de la note
-                let content = `<span>${names[i]}</span>`;
-                key.innerHTML = content;
+                if(names[i]) key.innerHTML = `<span>${names[i]}</span>`;
                 
                 key.addEventListener('mousedown', () => {
                     key.classList.add('active-key');
@@ -123,7 +134,6 @@
             });
         }
 
-        // FONCTION POUR LE CLAVIER PC
         function setupKeyboard() {
             window.addEventListener('keydown', (e) => {
                 const keyName = e.key.toLowerCase();
@@ -136,7 +146,6 @@
                     }
                 }
             });
-
             window.addEventListener('keyup', (e) => {
                 const keyName = e.key.toLowerCase();
                 const freq = keyMapping[keyName];
