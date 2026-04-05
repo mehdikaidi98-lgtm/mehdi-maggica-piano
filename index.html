@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mehdi Piano XL - Avec Effets de Clic !</title>
+    <title>Mehdi Piano XL - Clavier PC activé</title>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: white; overflow: hidden; }
         
@@ -31,18 +31,18 @@
         .piano-container { background: #333; padding: 20px; border-radius: 15px; border: 2px solid #2ecc71; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
         .piano { display: flex; }
         .key { cursor: pointer; transition: 0.1s; position: relative; }
-        .white { width: 50px; height: 230px; background: white; border: 1px solid #ddd; border-radius: 0 0 8px 8px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; color: #333; font-weight: bold; }
-        .black { width: 34px; height: 140px; background: #222; margin: 0 -17px; z-index: 2; border-radius: 0 0 5px 5px; }
+        .white { width: 50px; height: 230px; background: white; border: 1px solid #ddd; border-radius: 0 0 8px 8px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15px; color: #333; font-weight: bold; }
+        .black { width: 34px; height: 140px; background: #222; margin: 0 -17px; z-index: 2; border-radius: 0 0 5px 5px; color: white; font-size: 0.7rem; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 10px; }
         
-        /* C'est cette classe qui fait l'effet lumineux vert ! */
         .active-key { background: #2ecc71 !important; transform: translateY(5px); box-shadow: 0 5px 15px #2ecc71; }
+        .key-label { font-size: 0.8rem; color: #888; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div id="welcome-screen">
         <h1 style="color: #2ecc71; font-size: 4rem; letter-spacing: 5px; text-shadow: 0 0 20px #2ecc71;">MEHDI PIANO</h1>
-        <button class="start-btn" onclick="enterPiano()">DÉMARRER LE PIANO 🎹</button>
+        <button class="start-btn" onclick="enterPiano()">ACTIVER LE CLAVIER 🎹</button>
     </div>
 
     <div id="piano-interface">
@@ -65,6 +65,7 @@
             <div class="piano-container">
                 <div class="piano" id="keyboard"></div>
             </div>
+            <p style="margin-top: 20px; color: #2ecc71;">Utilise les touches : A, Z, E, R, T, Y, U, I, O, P...</p>
         </div>
     </div>
 
@@ -72,6 +73,12 @@
         let audioCtx;
         const freqs = [261, 277, 293, 311, 329, 349, 370, 392, 415, 440, 466, 494, 523, 554, 587, 622, 659, 698, 740, 784, 831, 880, 932, 988];
         const names = ["DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI", "DO", "", "RE", "", "MI", "FA", "", "SOL", "", "LA", "", "SI"];
+        
+        // Mapping des touches du clavier PC (AZERTY)
+        const keyMapping = {
+            'a': 261, 'q': 277, 'z': 293, 's': 311, 'e': 329, 'r': 349, 'f': 370, 't': 392, 'g': 415, 'y': 440, 'h': 466, 'u': 494,
+            'i': 523, 'k': 554, 'o': 587, 'l': 622, 'p': 659, 'm': 698
+        };
 
         const melodies = {
             'mario': [659, 659, 0, 659, 0, 523, 659, 0, 784, 0, 392, 0, 523, 392, 329, 440, 494, 466, 440, 392, 659, 784, 880, 698, 784, 659, 523, 587, 494],
@@ -91,6 +98,7 @@
             document.getElementById('welcome-screen').style.display = 'none';
             document.getElementById('piano-interface').style.display = 'flex';
             build();
+            setupKeyboard(); // Active l'écoute du clavier PC
         }
 
         function build() {
@@ -99,29 +107,48 @@
                 const key = document.createElement('div');
                 key.className = `key ${names[i] ? 'white' : 'black'}`;
                 key.id = "k-" + f;
-                if(names[i]) key.innerHTML = `<span>${names[i]}</span>`;
                 
-                // --- AJOUTS ICI POUR LES EFFETS DE CLIC ---
+                // On affiche le nom de la note
+                let content = `<span>${names[i]}</span>`;
+                key.innerHTML = content;
                 
-                // Quand on appuie sur le bouton de la souris (mousedown)
                 key.addEventListener('mousedown', () => {
-                    key.classList.add('active-key'); // Ajoute l'effet vert
-                    playNote(f, 5.0); // Joue la note avec ton écho de 5s
+                    key.classList.add('active-key');
+                    playNote(f, 5.0);
                 });
-                
-                // Quand on relâche le bouton (mouseup) ou que la souris sort (mouseleave)
-                // On utilise les deux pour être sûr que l'effet s'arrête bien.
                 key.addEventListener('mouseup', () => key.classList.remove('active-key'));
                 key.addEventListener('mouseleave', () => key.classList.remove('active-key'));
-                
-                // ----------------------------------------
                 
                 kb.appendChild(key);
             });
         }
 
+        // FONCTION POUR LE CLAVIER PC
+        function setupKeyboard() {
+            window.addEventListener('keydown', (e) => {
+                const keyName = e.key.toLowerCase();
+                const freq = keyMapping[keyName];
+                if (freq) {
+                    const el = document.getElementById("k-" + freq);
+                    if (el && !el.classList.contains('active-key')) {
+                        el.classList.add('active-key');
+                        playNote(freq, 5.0);
+                    }
+                }
+            });
+
+            window.addEventListener('keyup', (e) => {
+                const keyName = e.key.toLowerCase();
+                const freq = keyMapping[keyName];
+                if (freq) {
+                    const el = document.getElementById("k-" + freq);
+                    if (el) el.classList.remove('active-key');
+                }
+            });
+        }
+
         function playNote(f, d = 5.0) {
-            if (f === 0) return; // Silence
+            if (f === 0) return;
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
             o.type = 'triangle'; o.frequency.value = f;
@@ -134,10 +161,10 @@
         async function playMelody(m) {
             for(let f of melodies[m]) {
                 const el = document.getElementById("k-" + f);
-                if(el) el.classList.add('active-key'); // Effet vert automatique pour l'orchestre
+                if(el) el.classList.add('active-key');
                 if (f !== 0) playNote(f, 5.0);
                 await new Promise(r => setTimeout(r, 220)); 
-                if(el) el.classList.remove('active-key'); // Enlève l'effet
+                if(el) el.classList.remove('active-key');
             }
         }
     </script>
